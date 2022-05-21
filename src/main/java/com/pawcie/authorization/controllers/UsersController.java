@@ -12,4 +12,10 @@ public class UsersController {
     String[] printUsers() {
         return new String[]{"Kamil", "Paweł", "Kuba"};
     }
+
+    @GetMapping("all2")
+    String[] printUsers2() {
+        return new String[]{"Kamil", "Paweł", "Kuba"};
+    }
+
 }
