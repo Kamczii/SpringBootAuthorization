@@ -1,4 +1,7 @@
-FROM openjdk:17
-LABEL maintainer="pawcie"
-ADD target/authorization-0.0.1-SNAPSHOT.jar authorization.jar
-ENTRYPOINT ["java","-jar", "authorization.jar"]
+FROM openjdk:17-alpine3.13
+WORKDIR /app
+COPY .mvn/ .mvn
+COPY mvnw pom.xml ./
+RUN ./mvnw dependency:go-offline
+COPY src ./src
+CMD ["./mvnw", "spring-boot:run"]
