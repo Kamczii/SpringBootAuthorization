@@ -4,7 +4,7 @@ public enum ApplicationPermissions {
     PRODUCTS_READ("products:read"),
     PRODUCTS_WRITE("products:write"),
     USERS_READ("users:read"),
-    USERS_WRITE("products:write");
+    USERS_WRITE("users:write");
 
     private final String permission;
 

@@ -4,14 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import java.util.concurrent.TimeUnit;
 
 import static com.pawcie.authorization.security.ApplicationPermissions.PRODUCTS_WRITE;
 import static com.pawcie.authorization.security.ApplicationRoles.*;
@@ -38,7 +37,19 @@ public class ApplicationSecurityConfig {
                         .antMatchers("/products/**").hasRole(CUSTOMER.name())
                         .anyRequest().permitAll())
                 //.httpBasic(Customizer.withDefaults())
-                .formLogin(Customizer.withDefaults())
+                .formLogin(formLoginConfigurer -> {
+                    try {
+                        formLoginConfigurer.defaultSuccessUrl("/success", true)
+                                .and().rememberMe()
+                                .tokenValiditySeconds((int) TimeUnit.DAYS.toSeconds(21))
+                                .key("some custom key private and unique");
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                })
+                .logout(logoutConfigurer -> logoutConfigurer
+                        .logoutUrl("logout") // default behaviour
+                        .deleteCookies("JSESSIONID", "remember-me")) // default behaviour
                 .build();
     }
 
