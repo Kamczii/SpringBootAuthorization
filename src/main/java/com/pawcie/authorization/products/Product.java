@@ -3,22 +3,19 @@ package com.pawcie.authorization.products;
 import com.pawcie.authorization.utilities.TypeProduct;
 import lombok.*;
 
-
-@NoArgsConstructor
-@AllArgsConstructor
-@ToString
+@Builder
+@Data
 public class Product {
-    @Getter
-    @Setter
+    @NonNull
+    private int id;
+    @NonNull
     private TypeProduct type;
-    @Getter
-    @Setter
-    private char size;
-    @Getter
-    @Setter
+    @NonNull
+    private String size;
+    @NonNull
     private short amountInStock;
-    @Getter
-    @Setter
+    @NonNull
     private String info;
-
+    @NonNull
+    private boolean isPublished;
 }
