@@ -1,4 +1,4 @@
-package com.pawcie.authorization.products;
+package com.pawcie.authorization.entities;
 
 import com.pawcie.authorization.utilities.TypeProduct;
 import lombok.*;

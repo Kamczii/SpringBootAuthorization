@@ -1,13 +1,9 @@
-package com.pawcie.authorization.products;
+package com.pawcie.authorization.services;
 
-import com.pawcie.authorization.users.User;
-import com.pawcie.authorization.utilities.ForbiddenException;
+import com.pawcie.authorization.entities.Product;
 import com.pawcie.authorization.utilities.TypeProduct;
-import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.LinkedList;
 import java.util.List;

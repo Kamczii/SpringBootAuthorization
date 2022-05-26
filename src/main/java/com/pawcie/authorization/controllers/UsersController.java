@@ -1,5 +1,7 @@
-package com.pawcie.authorization.users;
+package com.pawcie.authorization.controllers;
 
+import com.pawcie.authorization.entities.User;
+import com.pawcie.authorization.services.UserService;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;

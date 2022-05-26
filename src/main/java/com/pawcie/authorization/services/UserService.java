@@ -1,10 +1,9 @@
-package com.pawcie.authorization.users;
+package com.pawcie.authorization.services;
 
+import com.pawcie.authorization.entities.User;
 import com.pawcie.authorization.utilities.ForbiddenException;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.util.Date;
 import java.util.List;
@@ -45,7 +44,7 @@ public class UserService {
                     .filter(u -> username.equals(u.getNick()))
                     .filter(u -> id.equals(u.getId()))
                     .findFirst()
-                    .orElseThrow(() -> new ForbiddenException());
+                    .orElseThrow(ForbiddenException::new);
 
         return true;
     }

@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.User;
@@ -63,26 +64,26 @@ public class ApplicationSecurityConfig {
                 .build();
     }
 
-    @Bean
-    public InMemoryUserDetailsManager userDetailsManager() {
-        UserDetails pawcio = User.builder()
-                .username("Pawcio")
-                .password(passwordEncoder.encode("password"))
-                .authorities(ADMIN.getAuthorities())
-                .build();
-
-        UserDetails kamilKulturysta = User.builder()
-                .username("Kamczii")
-                .password(passwordEncoder.encode("password123"))
-                .authorities(USER.getAuthorities())
-                .build();
-        UserDetails kubaModel = User.builder()
-                .username("mlody_jakub")
-                .password(passwordEncoder.encode("zalando123"))
-                .authorities(USER.getAuthorities())
-                .build();
-        return new InMemoryUserDetailsManager(pawcio, kamilKulturysta, kubaModel);
-    }
+//    @Bean
+//    public InMemoryUserDetailsManager userDetailsManager() {
+//        UserDetails pawcio = User.builder()
+//                .username("Pawcio")
+//                .password(passwordEncoder.encode("password"))
+//                .authorities(ADMIN.getAuthorities())
+//                .build();
+//
+//        UserDetails kamilKulturysta = User.builder()
+//                .username("Kamczii")
+//                .password(passwordEncoder.encode("password123"))
+//                .authorities(USER.getAuthorities())
+//                .build();
+//        UserDetails kubaModel = User.builder()
+//                .username("mlody_jakub")
+//                .password(passwordEncoder.encode("zalando123"))
+//                .authorities(USER.getAuthorities())
+//                .build();
+//        return new InMemoryUserDetailsManager(pawcio, kamilKulturysta, kubaModel);
+//    }
 
 
     @Bean

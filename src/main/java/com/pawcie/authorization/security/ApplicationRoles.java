@@ -13,7 +13,7 @@ import static com.pawcie.authorization.security.ApplicationPermissions.*;
 @AllArgsConstructor
 public enum ApplicationRoles {
     ADMIN(Sets.newHashSet(USERS_WRITE, USERS_READ, PRODUCTS_WRITE, PRODUCTS_READ)),
-    CUSTOMER(Sets.newHashSet(PRODUCTS_READ)),
+    USER(Sets.newHashSet(PRODUCTS_READ, USERS_READ)),
     SUPPORT(Sets.newHashSet(USERS_READ, PRODUCTS_READ));
 
     @Getter

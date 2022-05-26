@@ -1,4 +1,4 @@
-package com.pawcie.authorization.users;
+package com.pawcie.authorization.entities;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
