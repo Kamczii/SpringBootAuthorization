@@ -22,6 +22,8 @@ public class UsersController {
         return userService.getUsers();
     }
 
+    //TODO avaliable all ids for admin
+
     @GetMapping(path = "{id}")
     public User getUser(@PathVariable("id") Integer userId, Principal principal){
         return userService.getUser(userId);

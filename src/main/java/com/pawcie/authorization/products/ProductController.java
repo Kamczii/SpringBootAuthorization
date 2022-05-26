@@ -12,12 +12,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping(path="products")
-//all
-//published
-//        published/{id}
-//unpublished
-//        unpublished/{id}
-//@NoArgsConstructor
 @Data
 public class ProductController {
     @Autowired

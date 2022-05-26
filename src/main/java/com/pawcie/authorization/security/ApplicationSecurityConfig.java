@@ -27,6 +27,7 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private final PasswordEncoder passwordEncoder;
 
+    //TODO add basic pages for products, users, contact (only /)
     @Override
     public void configure (HttpSecurity httpSecurity) throws Exception {
         httpSecurity
@@ -37,6 +38,7 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/users/all").hasRole(ADMIN.name())
                 .antMatchers("/products/published/**").permitAll()
                 .antMatchers("/products/unpublished/**").hasRole(ADMIN.name())
+                .antMatchers("/contact/**").permitAll()
                 .anyRequest()
                 .authenticated()
                 .and()
