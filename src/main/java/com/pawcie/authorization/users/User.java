@@ -11,7 +11,7 @@ import java.util.Date;
 @AllArgsConstructor
 public class User {
 
-    private short id;
+    private Integer id;
     private String fullname;
     private String nick;
     private Date birthday;
