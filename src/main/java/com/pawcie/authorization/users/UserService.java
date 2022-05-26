@@ -25,7 +25,7 @@ public class UserService {
                 User.builder()
                         .id(1)
                         .fullname("Kamil C")
-                        .nick("Kamczi")
+                        .nick("Kamczii")
                         .birthday(new Date(2000 - 1900,04,04))
                         .build(),
 
@@ -39,7 +39,7 @@ public class UserService {
     }
 
 
-
+//check if admin
     private boolean checkUser(String username, Integer id){
             User user = getUsers().stream()
                     .filter(u -> username.equals(u.getNick()))
@@ -50,7 +50,7 @@ public class UserService {
         return true;
     }
 
-
+//map date with stream
     public User getUser(Integer id){
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         checkUser(username, id);

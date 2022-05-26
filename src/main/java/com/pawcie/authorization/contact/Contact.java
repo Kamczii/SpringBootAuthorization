@@ -6,7 +6,6 @@ import lombok.Getter;
 @Builder
 @Getter
 public class Contact {
-
     String number;
     String address;
     String email;
