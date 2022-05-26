@@ -33,10 +33,10 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/", "index", "/css/*", "/js/*").permitAll() //whitelist specific parameters
-                .antMatchers("products/all").hasRole(ADMIN.name())
+                .antMatchers("/products/all").hasRole(ADMIN.name())
                 .antMatchers("/users/all").hasRole(ADMIN.name())
-                .antMatchers("products/published").hasRole(USER.name())
-                .antMatchers("products/unpublished").hasRole(ADMIN.name())
+                .antMatchers("/products/published/**").permitAll()
+                .antMatchers("/products/unpublished/**").hasRole(ADMIN.name())
                 .anyRequest()
                 .authenticated()
                 .and()
@@ -58,7 +58,7 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorities(USER.getAuthorities())
                 .build();
         UserDetails kubaModel = User.builder()
-                .username("Kuba")
+                .username("mlody_jakub")
                 .password(passwordEncoder.encode("zalando123"))
                 .authorities(USER.getAuthorities())
                 .build();

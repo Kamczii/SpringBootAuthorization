@@ -17,5 +17,5 @@ public class Product {
     @NonNull
     private String info;
     @NonNull
-    private boolean isPublished;
+    private Integer published;
 }

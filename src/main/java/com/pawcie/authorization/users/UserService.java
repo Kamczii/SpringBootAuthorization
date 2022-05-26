@@ -1,5 +1,6 @@
 package com.pawcie.authorization.users;
 
+import com.pawcie.authorization.utilities.ForbiddenException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -24,7 +25,7 @@ public class UserService {
                 User.builder()
                         .id(1)
                         .fullname("Kamil C")
-                        .nick("Kamczii")
+                        .nick("Kamczi")
                         .birthday(new Date(2000 - 1900,04,04))
                         .build(),
 
@@ -37,9 +38,7 @@ public class UserService {
         );
     }
 
-    @ResponseStatus(HttpStatus.FORBIDDEN)
-    public class ForbiddenException extends RuntimeException {
-    }
+
 
     private boolean checkUser(String username, Integer id){
             User user = getUsers().stream()
@@ -59,5 +58,5 @@ public class UserService {
                 .filter(u -> id.equals(u.getId()))
                 .findFirst()
                 .orElseThrow(() -> new IllegalStateException("User "+id+" does not exists"));
-        }
+    }
 }

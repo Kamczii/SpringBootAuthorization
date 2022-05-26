@@ -4,6 +4,7 @@ import com.pawcie.authorization.utilities.TypeProduct;
 import lombok.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -32,8 +33,18 @@ public class ProductController {
         return productService.getPublishedProducts();
     }
 
+    @GetMapping("/published/{id}")
+    public Product getPublishedProductById(@PathVariable("id") Integer id){
+        return productService.getProductById(id, 1);
+    }
+
     @GetMapping("/unpublished")
     public List<Product> getUnpublishedProducts(){
         return productService.getUnpublishedProducts();
+    }
+
+    @GetMapping("/unpublished/{id}")
+    public Product getUnpublishedProductById(@PathVariable("id") Integer id){
+        return productService.getProductById(id,0);
     }
 }
