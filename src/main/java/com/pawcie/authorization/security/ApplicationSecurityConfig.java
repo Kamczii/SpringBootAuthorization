@@ -1,5 +1,6 @@
 package com.pawcie.authorization.security;
 
+import com.pawcie.authorization.jwt.JwtUsernamePasswordAuthenticationFilter;
 import com.pawcie.authorization.users.ApplicationUserDetailsService;
 import lombok.AllArgsConstructor;
 import org.checkerframework.checker.units.qual.A;
@@ -8,7 +9,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.authentication.configurers.userdetails.DaoAuthenticationConfigurer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.User;
@@ -25,7 +29,7 @@ import static com.pawcie.authorization.security.ApplicationRoles.*;
 
 @Configuration
 @AllArgsConstructor
-public class ApplicationSecurityConfig {
+public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter{
 
     @Autowired
     private final PasswordEncoder passwordEncoder;
@@ -33,36 +37,23 @@ public class ApplicationSecurityConfig {
     @Autowired
     private final ApplicationUserDetailsService applicationUserDetailsService;
 
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
-        return httpSecurity
-                .authenticationProvider(authenticationProvider())
-                //.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()).and()
-                .authorizeHttpRequests((auth) -> auth
-                        .antMatchers("/", "index", "/css/*", "/js/*").permitAll() //whitelist specific parameters
-                        .antMatchers("/products/all").hasRole(ADMIN.name())
-                        .antMatchers("/users/all").hasRole(ADMIN.name())
-                        .antMatchers("/products/published/**").permitAll()
-                        .antMatchers("/products/unpublished/**").hasRole(ADMIN.name())
-                        .antMatchers("/contact/**").permitAll()
-                        .anyRequest()
-                        .authenticated())
-                //.httpBasic(Customizer.withDefaults())
-                .formLogin(formLoginConfigurer -> {
-                    try {
-                        formLoginConfigurer.defaultSuccessUrl("/users/all", true)
-                                .and().rememberMe()
-                                .tokenValiditySeconds((int) TimeUnit.DAYS.toSeconds(21))
-                                .key("some custom key private and unique");
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                })
-                .logout(logoutConfigurer -> logoutConfigurer
-                        .logoutUrl("logout") // default behaviour
-                        .deleteCookies("JSESSIONID", "remember-me")) // default behaviour
-                .build();
+    @Override
+    public void configure (HttpSecurity httpSecurity) throws Exception {
+        httpSecurity
+                .csrf().disable()
+                .authorizeRequests()
+                .antMatchers("/", "index", "/css/*", "/js/*").permitAll() //whitelist specific parameters
+                .antMatchers("/products/all").hasRole(ADMIN.name())
+                .antMatchers("/users/all").hasRole(ADMIN.name())
+                .antMatchers("/products/published/**").permitAll()
+                .antMatchers("/products/unpublished/**").hasRole(ADMIN.name())
+                .antMatchers("/contact/**").permitAll()
+                .anyRequest()
+                .authenticated()
+                .and()
+                .httpBasic();
     }
+
 
 //    @Bean
 //    public InMemoryUserDetailsManager userDetailsManager() {
@@ -85,6 +76,11 @@ public class ApplicationSecurityConfig {
 //        return new InMemoryUserDetailsManager(pawcio, kamilKulturysta, kubaModel);
 //    }
 
+
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.authenticationProvider(authenticationProvider());
+    }
 
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
