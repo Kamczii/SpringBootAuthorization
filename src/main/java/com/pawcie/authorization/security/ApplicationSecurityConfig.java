@@ -1,5 +1,7 @@
 package com.pawcie.authorization.security;
 
+import com.pawcie.authorization.jwt.JwtConfig;
+import com.pawcie.authorization.jwt.JwtTokenVerifier;
 import com.pawcie.authorization.jwt.JwtUsernamePasswordAuthenticationFilter;
 import com.pawcie.authorization.users.ApplicationUserDetailsService;
 import lombok.AllArgsConstructor;
@@ -15,6 +17,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.authentication.configurers.userdetails.DaoAuthenticationConfigurer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -37,10 +40,17 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter{
     @Autowired
     private final ApplicationUserDetailsService applicationUserDetailsService;
 
+    @Autowired
+    private final JwtConfig jwtConfig;
+
     @Override
     public void configure (HttpSecurity httpSecurity) throws Exception {
         httpSecurity
                 .csrf().disable()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // sesja nie będzie przechowywana w bazie
+                .and()
+                .addFilter(new JwtUsernamePasswordAuthenticationFilter(authenticationManager(), jwtConfig))
+                .addFilterAfter(new JwtTokenVerifier(jwtConfig), JwtUsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
                 .antMatchers("/", "index", "/css/*", "/js/*").permitAll() //whitelist specific parameters
                 .antMatchers("/products/all").hasRole(ADMIN.name())
@@ -49,9 +59,7 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter{
                 .antMatchers("/products/unpublished/**").hasRole(ADMIN.name())
                 .antMatchers("/contact/**").permitAll()
                 .anyRequest()
-                .authenticated()
-                .and()
-                .httpBasic();
+                .authenticated();
     }
 
 
