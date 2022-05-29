@@ -56,7 +56,12 @@ public class JwtTokenVerifier extends OncePerRequestFilter {
 
             filterChain.doFilter(request, response);
         } catch (JwtException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Cannot proceed " + token + " token");
         }
+    }
+
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+        return request.getRequestURI().startsWith("/api/public");
     }
 }

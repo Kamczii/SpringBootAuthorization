@@ -1,7 +1,7 @@
 package com.pawcie.authorization.controllers;
 
-import com.pawcie.authorization.entities.User;
-import com.pawcie.authorization.services.UserService;
+import com.pawcie.authorization.entities.ApplicationUser;
+import com.pawcie.authorization.services.ApplicationUserDetailsService;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,20 +14,20 @@ import java.util.List;
 
 @RestController
 @RequestMapping("users")
-@Data
 public class UsersController {
+
     @Autowired
-    private final UserService userService;
+    private ApplicationUserDetailsService userService;
 
     @GetMapping("/all")
-    public List<User> printUsers() {
-        return userService.getUsers();
+    public List<ApplicationUser> printUsers() {
+        return userService.loadUsers();
     }
 
     //TODO avaliable all ids for admin
 
     @GetMapping(path = "{id}")
-    public User getUser(@PathVariable("id") Integer userId, Principal principal){
-        return userService.getUser(userId);
+    public ApplicationUser getUser(@PathVariable("id") Integer userId, Principal principal){
+        return userService.loadUserById(userId);
     }
 }

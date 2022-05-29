@@ -11,6 +11,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -21,13 +22,17 @@ import java.nio.charset.StandardCharsets;
 import java.sql.Date;
 import java.time.LocalDate;
 
-@AllArgsConstructor
 public class JwtUsernamePasswordAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private AuthenticationManager authenticationManager;
 
     private JwtConfig jwtConfig;
 
+    public JwtUsernamePasswordAuthenticationFilter(AuthenticationManager authenticationManager, JwtConfig jwtConfig) {
+        setRequiresAuthenticationRequestMatcher(new AntPathRequestMatcher("/api/receive-token","POST"));
+        this.authenticationManager = authenticationManager;
+        this.jwtConfig = jwtConfig;
+    }
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
@@ -49,6 +54,6 @@ public class JwtUsernamePasswordAuthenticationFilter extends UsernamePasswordAut
                 .claim("authorities",authResult.getAuthorities())
                 .signWith(jwtConfig.getSecretKey())
                 .compact();
-        response.addHeader("Authorization", "Beaer " + token);
+        response.getWriter().print(token);
     }
 }

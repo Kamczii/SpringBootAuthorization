@@ -1,4 +1,4 @@
-package com.pawcie.authorization.users;
+package com.pawcie.authorization.entities;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,6 +10,7 @@ import java.util.Set;
 @Getter
 @AllArgsConstructor
 public class ApplicationUser implements UserDetails {
+    private final Integer id;
     private final String username;
     private final String password;
     private final Set<? extends GrantedAuthority> authorities;

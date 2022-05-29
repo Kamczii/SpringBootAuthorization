@@ -1,9 +1,7 @@
 package com.pawcie.authorization.users;
 
-import com.pawcie.authorization.users.ApplicationUser;
-import com.pawcie.authorization.users.ApplicationUserRepository;
+import com.pawcie.authorization.entities.ApplicationUser;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Repository;
 
@@ -27,23 +25,30 @@ public class MockUserDetailsRepository implements ApplicationUserRepository {
         return getUsers().stream().filter(user -> user.getUsername().equals(username)).findFirst();
     }
 
+    public List<ApplicationUser> loadUsers() {
+        return getUsers();
+    }
+
     private List<ApplicationUser> getUsers() {
         return List.of(
-                new ApplicationUser("Pawcio",
+                new ApplicationUser(1,
+                        "Pawcio",
                         bCryptPasswordEncoder.encode("password"),
                         ADMIN.getAuthorities(),
                         true,
                         true,
                         true,
                         true),
-                new ApplicationUser("Kamczi",
+                new ApplicationUser(2,
+                        "Kamczi",
                         bCryptPasswordEncoder.encode("password123"),
                         USER.getAuthorities(),
                         true,
                         true,
                         true,
                         true),
-                new ApplicationUser("mlody_jakub",
+                new ApplicationUser(3,
+                        "mlody_jakub",
                         bCryptPasswordEncoder.encode("zalando123"),
                         USER.getAuthorities(),
                         true,
