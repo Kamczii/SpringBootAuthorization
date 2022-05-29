@@ -21,6 +21,10 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.sql.Date;
 import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 public class JwtUsernamePasswordAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
@@ -48,12 +52,23 @@ public class JwtUsernamePasswordAuthenticationFilter extends UsernamePasswordAut
 
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
-        String token = Jwts.builder()
+        String accessToken = Jwts.builder()
                 .setSubject(authResult.getName())
                 .setExpiration(Date.valueOf(LocalDate.now().plusDays(2)))
                 .claim("authorities",authResult.getAuthorities())
                 .signWith(jwtConfig.getSecretKey())
                 .compact();
-        response.getWriter().print(token);
+        String refreshToken = Jwts.builder()
+                .setSubject(authResult.getName())
+                .setExpiration(Date.valueOf(LocalDate.now().plusDays(30)))
+                .signWith(jwtConfig.getSecretKey())
+                .compact();
+
+        Map<String, String> tokens = new HashMap<String, String>();
+        tokens.put("access_token", accessToken);
+        tokens.put("refresh_token", refreshToken);
+        response.setContentType(APPLICATION_JSON_VALUE);
+        new ObjectMapper().writeValue(response.getOutputStream(), tokens);
+
     }
 }

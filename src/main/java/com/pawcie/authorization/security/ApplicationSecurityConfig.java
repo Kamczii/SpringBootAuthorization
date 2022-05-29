@@ -63,13 +63,27 @@ public class ApplicationSecurityConfig {
         public void configure (HttpSecurity httpSecurity) throws Exception {
             httpSecurity
                     .csrf().disable()
+                    .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // sesja nie będzie przechowywana w bazie
+                    .and()
+                    .addFilter(new JwtUsernamePasswordAuthenticationFilter(authenticationManager(), jwtConfig))
+                    .addFilterAfter(new JwtTokenVerifier(jwtConfig), JwtUsernamePasswordAuthenticationFilter.class)
                     .authorizeRequests()
-                    .antMatchers("/", "index", "/css/*", "/js/*", "/images/**").permitAll() //whitelist specific parameters
-                    .antMatchers("/products/all").hasRole(ADMIN.name())
-                    .antMatchers("/users/all").hasRole(ADMIN.name())
-                    .antMatchers("/products/published/**").authenticated()
-                    .antMatchers("/products/unpublished/**").hasRole(ADMIN.name())
-                    .antMatchers("/contact/**").permitAll()
+                    .antMatchers(
+                            "/",
+                            "index",
+                            "/css/*",
+                            "/js/*",
+                            "/products/published/**",
+                            "/contact/**",
+                            "/token/refresh").permitAll() //whitelist specific parameters
+                    .antMatchers(
+                            "/products/all",
+                            "/users/all",
+                            "/products/unpublished/**").hasRole(ADMIN.name())
+//                .antMatchers("/users/all").hasRole(ADMIN.name())
+//                .antMatchers("/products/published/**").permitAll()
+//                .antMatchers("/products/unpublished/**").hasRole(ADMIN.name())
+//                .antMatchers("/contact/**").permitAll()
                     .anyRequest()
                     .authenticated()
                     .and()
