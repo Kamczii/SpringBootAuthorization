@@ -33,7 +33,7 @@ public class JwtTokenVerifier extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String header = request.getHeader(AUTHORIZATION);
 
-        if (!header.startsWith("Bearer ") || Strings.isNullOrEmpty(header)) {
+        if (Strings.isNullOrEmpty(header) || !header.startsWith("Bearer ") ) {
             // nie obsługujemy dalej rządania
             filterChain.doFilter(request, response);
             return;
@@ -47,7 +47,7 @@ public class JwtTokenVerifier extends OncePerRequestFilter {
 
             String subject = claimsJws.getBody().getSubject();
 
-            List<Map<String, String>> authorities = (List<Map<String, String>>) claimsJws.getBody().get("access_token");
+            List<Map<String, String>> authorities = (List<Map<String, String>>) claimsJws.getBody().get("authorities");
 
             Set<SimpleGrantedAuthority> simpleGrantedAuthorities = authorities.stream()
                     .map(kv -> new SimpleGrantedAuthority(kv.get("authority"))).collect(Collectors.toSet());

@@ -58,25 +58,20 @@ public class JwtTokenRefresh {
 
     @GetMapping("/refresh")
     public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws JSONException, IOException {
-//        String authHeader = request.getHeader(AUTHORIZATION);
-        String auth = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
-        JSONObject obj = new JSONObject(auth);
-
-        if(auth != null && auth.startsWith("Bearer ")){
             try {
-                String refreshToken = obj.getJSONObject("refresh_token").toString();
+                String refreshToken = new ObjectMapper()
+                        .readValue(request.getInputStream(), String.class);;
 
                 Jws<Claims> claimsJws = Jwts.parserBuilder()
                         .setSigningKey(jwtConfig.getSecretKey()).build().parseClaimsJws(refreshToken);
 
                 String username = claimsJws.getBody().getSubject();
-                List<Map<String, String>> authorities = (List<Map<String, String>>) claimsJws.getBody().get("access_token");
 
                 ApplicationUser user = applicationUserDetailsService.loadUserByUsername(username);
 
                 String access_token = Jwts.builder()
                         .setSubject(user.getUsername())
-                        .setExpiration(Date.valueOf(LocalDate.now().plusDays(2)))
+                        .setExpiration(new Date(System.currentTimeMillis() + 2 * 1000 * 60 ))
                         .claim("authorities", user.getAuthorities())
                         .signWith(jwtConfig.getSecretKey())
                         .compact();
@@ -93,8 +88,5 @@ public class JwtTokenRefresh {
                 response.setContentType(MimeTypeUtils.APPLICATION_JSON_VALUE);
                 new ObjectMapper().writeValue(response.getOutputStream(), error);
             }
-        }else{
-            throw new RuntimeException("Refresh token is missing");
-        }
     }
 }

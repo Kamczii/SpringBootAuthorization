@@ -49,7 +49,7 @@ public class JwtUsernamePasswordAuthenticationFilter extends UsernamePasswordAut
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
         String accessToken = Jwts.builder()
                 .setSubject(authResult.getName())
-                .setExpiration(Date.valueOf(LocalDate.now().plusDays(2)))
+                .setExpiration(new Date(System.currentTimeMillis() + 2 * 1000 * 60 ))
                 .claim("authorities",authResult.getAuthorities())
                 .signWith(jwtConfig.getSecretKey())
                 .compact();
