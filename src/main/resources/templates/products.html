@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Produkty</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+          crossorigin="anonymous" />
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-sm">
+            <h1>Menu</h1>
+            <ul class="list-group">
+                <li class="list-group-item"><a th:href="@{/products/published}">Opublikowane produkty</a></li>
+                <li class="list-group-item"><a th:href="@{/products/unpublished}">Nieopublikowane produkty</a></li>
+                <li class="list-group-item"><a th:href="@{/products/all}">Wszystkie produkty</a></li>
+                <li class="list-group-item"><a th:href="@{/users/all}">Wszyscy użytkownicy</a></li>
+                <li class="list-group-item">
+                    API
+                    <ul class="list-group">
+                        <li class="list-group-item">/api/private/hello</li>
+                        <li class="list-group-item">/api/public/hello</li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        <div class="col-sm">
+            <h1>Produkty</h1>
+            <table class="table table-striped">
+                <thead class="thead-light">
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Typ</th>
+                        <th scope="col">Rozmiar</th>
+                        <th scope="col">Info</th>
+                        <th scope="col">Opublikowany</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="product: ${products}">
+
+                            <td><a th:text="${product.getId()}" th:href="@{/products/published/{id}(id=${product.getId()})}"/></td>
+                            <td th:text="${product.getType()}" />
+                            <td th:text="${product.getSize()}" />
+                            <td th:text="${product.getInfo()}" />
+                            <td th:if="${!product.getPublished().equals(0)}" >&#9989;</td>
+                            <td th:if="${product.getPublished().equals(0)}" >&#10060;</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-sm">
+            <a class="btn btn-primary" th:href="@{/logout}">Wyloguj</a>
+        </div>
+    </div>
+</div>
+<div class="container-fluid text-center">
+    <div>
+
+    </div>
+</div>
+</body>
+</html>

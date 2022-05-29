@@ -3,6 +3,7 @@ package com.pawcie.authorization.security;
 import com.pawcie.authorization.jwt.JwtConfig;
 import com.pawcie.authorization.jwt.JwtTokenVerifier;
 import com.pawcie.authorization.jwt.JwtUsernamePasswordAuthenticationFilter;
+import com.pawcie.authorization.oauth.GithubOAuthUser;
 import com.pawcie.authorization.services.ApplicationUserDetailsService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,16 +46,17 @@ public class ApplicationSecurityConfig {
                     .addFilter(new JwtUsernamePasswordAuthenticationFilter(authenticationManager(), jwtConfig))
                     .addFilterAfter(new JwtTokenVerifier(jwtConfig), JwtUsernamePasswordAuthenticationFilter.class)
                     .authorizeRequests()
-                    .antMatchers("/api/private/**").hasAnyRole(ADMIN.name(), USER.name())
+                    .antMatchers("/api/private/**").hasAnyRole(ADMIN.name(), USER.name()) //TODO: komunikat zamiast przekierowania na logowanie
                     .antMatchers("/api/public/**").permitAll()
                     .anyRequest().denyAll();
         }
 
         @Override
-        protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        protected void configure(AuthenticationManagerBuilder auth) {
             auth.authenticationProvider(ApplicationSecurityConfig.this.authenticationProvider());
         }
     }
+
     @Configuration
     public class FormLoginSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter {
         @Override
@@ -62,23 +64,23 @@ public class ApplicationSecurityConfig {
             httpSecurity
                     .csrf().disable()
                     .authorizeRequests()
-                    .antMatchers("/", "index", "/css/*", "/js/*").permitAll() //whitelist specific parameters
+                    .antMatchers("/", "index", "/css/*", "/js/*", "/images/**").permitAll() //whitelist specific parameters
                     .antMatchers("/products/all").hasRole(ADMIN.name())
                     .antMatchers("/users/all").hasRole(ADMIN.name())
-                    .antMatchers("/products/published/**").permitAll()
+                    .antMatchers("/products/published/**").authenticated()
                     .antMatchers("/products/unpublished/**").hasRole(ADMIN.name())
                     .antMatchers("/contact/**").permitAll()
-                    .antMatchers("/oauth2", "/login-auth", "login/**").permitAll()
                     .anyRequest()
                     .authenticated()
                     .and()
-                    .formLogin().loginPage("/login-auth")
+                    .formLogin().loginPage("/login").defaultSuccessUrl("/welcome").permitAll()
                     .and()
-                    .oauth2Login().loginPage("/login-auth");
+                    .oauth2Login().userInfoEndpoint()
+                    .customUserType(GithubOAuthUser.class, "github").and().loginPage("/login").defaultSuccessUrl("/welcome").permitAll();
         }
 
         @Override
-        protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        protected void configure(AuthenticationManagerBuilder auth) {
             auth.authenticationProvider(ApplicationSecurityConfig.this.authenticationProvider());
         }
 

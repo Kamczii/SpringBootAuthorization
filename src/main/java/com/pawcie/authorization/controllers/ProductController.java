@@ -4,14 +4,17 @@ import com.pawcie.authorization.entities.Product;
 import com.pawcie.authorization.services.ProductService;
 import lombok.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Collections;
 import java.util.List;
 
-@RestController
+@Controller
 @RequestMapping(path="products")
 @Data
 public class ProductController {
@@ -19,27 +22,37 @@ public class ProductController {
     private final ProductService productService;
 
     @GetMapping("/all")
-    public List<Product> getProducts() {
-        return  productService.getProducts();
+    public String getProducts(Model model) {
+        List<Product> products = productService.getProducts();
+        model.addAttribute("products", products);
+        return  "products";
     }
 
     @GetMapping("/published")
-    public List<Product> getPublishedProducts(){
-        return productService.getPublishedProducts();
+    public String getPublishedProducts(Model model){
+        List<Product> products = productService.getPublishedProducts();
+        model.addAttribute("products", products);
+        return "products";
     }
 
     @GetMapping("/published/{id}")
-    public Product getPublishedProductById(@PathVariable("id") Integer id){
-        return productService.getProductById(id, 1);
+    public String getPublishedProductById(@PathVariable("id") Integer id, Model model){
+        Product product =  productService.getProductById(id, 1);
+        model.addAttribute("products", Collections.singleton(product));
+        return "products";
     }
 
     @GetMapping("/unpublished")
-    public List<Product> getUnpublishedProducts(){
-        return productService.getUnpublishedProducts();
+    public String getUnpublishedProducts(Model model){
+        List<Product> products = productService.getUnpublishedProducts();
+        model.addAttribute("products", products);
+        return "products";
     }
 
     @GetMapping("/unpublished/{id}")
-    public Product getUnpublishedProductById(@PathVariable("id") Integer id){
-        return productService.getProductById(id,0);
+    public String getUnpublishedProductById(@PathVariable("id") Integer id, Model model){
+        Product product =  productService.getProductById(id,0);
+        model.addAttribute("products", Collections.singleton(product));
+        return "products";
     }
 }

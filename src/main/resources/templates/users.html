@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Użytkownicy</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+          crossorigin="anonymous" />
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-sm">
+            <h1>Menu</h1>
+            <ul class="list-group">
+                <li class="list-group-item"><a th:href="@{/products/published}">Opublikowane produkty</a></li>
+                <li class="list-group-item"><a th:href="@{/products/unpublished}">Nieopublikowane produkty</a></li>
+                <li class="list-group-item"><a th:href="@{/products/all}">Wszystkie produkty</a></li>
+                <li class="list-group-item"><a th:href="@{/users/all}">Wszyscy użytkownicy</a></li>
+                <li class="list-group-item">
+                    API
+                    <ul class="list-group">
+                        <li class="list-group-item">/api/private/hello</li>
+                        <li class="list-group-item">/api/public/hello</li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        <div class="col-sm">
+            <h1>Użytkownicy</h1>
+            <table class="table table-striped">
+                <thead class="thead-light">
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Nazwa użytkownika</th>
+                    <th scope="col">Uprawnienia</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="user: ${users}">
+                    <td><a th:text="${user.getId()}" th:href="@{/users/{id}(id=${user.getId()})}"/></td>
+                    <td th:text="${user.getUsername()}" />
+                    <td th:text="${user.getAuthorities()}" />
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-sm">
+            <a class="btn btn-primary" th:href="@{/logout}">Wyloguj</a>
+        </div>
+    </div>
+</div>
+<div class="container-fluid text-center">
+    <div>
+
+    </div>
+</div>
+</body>
+</html>
