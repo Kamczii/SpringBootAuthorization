@@ -22,6 +22,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
+
 @AllArgsConstructor
 public class JwtTokenVerifier extends OncePerRequestFilter {
 
@@ -29,7 +31,7 @@ public class JwtTokenVerifier extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String header = request.getHeader("Authorization");
+        String header = request.getHeader(AUTHORIZATION);
 
         if (!header.startsWith("Bearer ") || Strings.isNullOrEmpty(header)) {
             // nie obsługujemy dalej rządania
