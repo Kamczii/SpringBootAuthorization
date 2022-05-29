@@ -1,8 +1,8 @@
 package com.pawcie.authorization.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.pawcie.authorization.users.ApplicationUser;
-import com.pawcie.authorization.users.ApplicationUserDetailsService;
+import com.pawcie.authorization.entities.ApplicationUser;
+import com.pawcie.authorization.services.ApplicationUserDetailsService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
@@ -39,7 +39,7 @@ public class JwtTokenRefresh {
     public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
             try {
                 String refreshToken = new ObjectMapper()
-                        .readValue(request.getInputStream(), String.class);;
+                        .readValue(request.getInputStream(), String.class);
 
                 Jws<Claims> claimsJws = Jwts.parserBuilder()
                         .setSigningKey(jwtConfig.getSecretKey()).build().parseClaimsJws(refreshToken);
