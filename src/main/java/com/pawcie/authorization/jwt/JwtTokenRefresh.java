@@ -4,7 +4,9 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.util.JSONPObject;
 import com.pawcie.authorization.entities.User;
 import com.pawcie.authorization.services.UserService;
 import com.pawcie.authorization.users.ApplicationUser;
@@ -15,6 +17,8 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import lombok.AllArgsConstructor;
 import org.apache.catalina.Role;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.GrantedAuthority;
@@ -28,6 +32,7 @@ import javax.crypto.SecretKey;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.sql.Date;
 import java.time.LocalDate;
@@ -52,11 +57,15 @@ public class JwtTokenRefresh {
     private ApplicationUserDetailsService applicationUserDetailsService;
 
     @GetMapping("/refresh")
-    public void refreshToken(HttpServletRequest request, HttpServletResponse response){
-        String authHeader = request.getHeader(AUTHORIZATION)
-        if(authHeader != null && authHeader.startsWith("Bearer ")){
+    public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws JSONException, IOException {
+//        String authHeader = request.getHeader(AUTHORIZATION);
+        String auth = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
+        JSONObject obj = new JSONObject(auth);
+
+        if(auth != null && auth.startsWith("Bearer ")){
             try {
-                String refreshToken = authHeader.split(" ")[1];
+                String refreshToken = obj.getJSONObject("refresh_token").toString();
+
                 Jws<Claims> claimsJws = Jwts.parserBuilder()
                         .setSigningKey(jwtConfig.getSecretKey()).build().parseClaimsJws(refreshToken);
 
@@ -68,7 +77,7 @@ public class JwtTokenRefresh {
                 String access_token = Jwts.builder()
                         .setSubject(user.getUsername())
                         .setExpiration(Date.valueOf(LocalDate.now().plusDays(2)))
-                        .claim("authorities", user.getAuthorities().stream().map(Role::getName).collect(Collectors.toList()))
+                        .claim("authorities", user.getAuthorities())
                         .signWith(jwtConfig.getSecretKey())
                         .compact();
                 Map<String, String> tokens = new HashMap<>();
