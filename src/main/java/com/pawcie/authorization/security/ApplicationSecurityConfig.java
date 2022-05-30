@@ -50,11 +50,11 @@ public class ApplicationSecurityConfig {
                     .antMatchers("/api/public/**").permitAll()
                     .anyRequest().denyAll();
         }
-
-        @Override
-        protected void configure(AuthenticationManagerBuilder auth) {
-            auth.authenticationProvider(ApplicationSecurityConfig.this.authenticationProvider());
-        }
+//
+//        @Override
+//        protected void configure(AuthenticationManagerBuilder auth) {
+//            auth.authenticationProvider(ApplicationSecurityConfig.this.authenticationProvider());
+//        }
     }
 
     @Configuration
@@ -72,7 +72,8 @@ public class ApplicationSecurityConfig {
                             "/images/**",
                             "/products/published/**",
                             "/contact/**",
-                            "/token/refresh").permitAll() //whitelist specific parameters
+                            "/token/refresh",
+                            "/login").permitAll() //whitelist specific parameters
                     .antMatchers(
                             "/products/all",
                             "/users/all",
@@ -84,16 +85,17 @@ public class ApplicationSecurityConfig {
                     .anyRequest()
                     .authenticated()
                     .and()
-                    .formLogin().loginPage("/login").defaultSuccessUrl("/welcome").permitAll()
+                    .formLogin().loginPage("/login").defaultSuccessUrl("/").permitAll()
                     .and()
                     .oauth2Login().userInfoEndpoint()
-                    .customUserType(GithubOAuthUser.class, "github").and().loginPage("/login").defaultSuccessUrl("/welcome").permitAll();
+                    .customUserType(GithubOAuthUser.class, "google")
+                    .customUserType(GithubOAuthUser.class, "github").and().loginPage("/login").defaultSuccessUrl("/").permitAll();
         }
 
-        @Override
-        protected void configure(AuthenticationManagerBuilder auth) {
-            auth.authenticationProvider(ApplicationSecurityConfig.this.authenticationProvider());
-        }
+//        @Override
+//        protected void configure(AuthenticationManagerBuilder auth) {
+//            auth.authenticationProvider(ApplicationSecurityConfig.this.authenticationProvider());
+//        }
 
     }
 

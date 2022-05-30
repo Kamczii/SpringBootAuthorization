@@ -1,4 +1,4 @@
-package com.pawcie.authorization.contact;
+package com.pawcie.authorization.entities;
 
 import lombok.Builder;
 import lombok.Getter;

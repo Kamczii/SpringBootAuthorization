@@ -1,5 +1,6 @@
-package com.pawcie.authorization.contact;
+package com.pawcie.authorization.services;
 
+import com.pawcie.authorization.entities.Contact;
 import org.springframework.stereotype.Service;
 
 @Service

@@ -13,9 +13,10 @@ public class LoginController {
         return "login";
     }
 
-    @GetMapping("/welcome")
+    @GetMapping("/")
     public String welcome(Model model) {
-        model.addAttribute("username", SecurityContextHolder.getContext().getAuthentication().getName());
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        model.addAttribute("username", username.equals("anonymousUser") ? "użytkowniku" : username);
         return "welcome";
     }
 }

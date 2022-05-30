@@ -15,12 +15,8 @@
     </div>
     <form th:action="@{/login}" method="post" style="max-width: 350px; margin: 0 auto;">
 
-        <div th:if="${param.error}">
-            <p class="text-danger">[[${session.SPRING_SECURITY_LAST_EXCEPTION.message}]]</p>
-        </div>
-
         <div th:if="${param.logout}">
-            <p class="text-warning">You have been logged out.</p>
+            <p class="text-warning">Wylogowałeś się.</p>
         </div>
 
         <div class="border border-secondary p-3 rounded">
@@ -42,9 +38,9 @@
             <a class="btn  btn-default" th:href="@{/oauth2/authorization/github}" role="button">
                 <img src="../static/images/github.png" style="width: 100px; height: 100px" th:src="@{/images/github.png}" />
             </a>
-            <a class="btn  btn-default" th:href="@{/oauth2/authorization/google}" role="button">
-                <img src="../static/images/google.png" style="width: 100px; height: 100px" th:src="@{/images/google.png}" />
-            </a>
+<!--            <a class="btn  btn-default" th:href="@{/oauth2/authorization/google}" role="button">-->
+<!--                <img src="../static/images/google.png" style="width: 100px; height: 100px" th:src="@{/images/google.png}" />-->
+<!--            </a>-->
         </div>
     </form>
 </div>

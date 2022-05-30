@@ -1,5 +1,7 @@
-package com.pawcie.authorization.contact;
+package com.pawcie.authorization.controllers;
 
+import com.pawcie.authorization.entities.Contact;
+import com.pawcie.authorization.services.ContactService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
