@@ -50,11 +50,11 @@ public class ApplicationSecurityConfig {
                     .antMatchers("/api/public/**").permitAll()
                     .anyRequest().denyAll();
         }
-//
-//        @Override
-//        protected void configure(AuthenticationManagerBuilder auth) {
-//            auth.authenticationProvider(ApplicationSecurityConfig.this.authenticationProvider());
-//        }
+
+        @Override
+        protected void configure(AuthenticationManagerBuilder auth) {
+            auth.authenticationProvider(ApplicationSecurityConfig.this.authenticationProvider());
+        }
     }
 
     @Configuration
@@ -92,10 +92,10 @@ public class ApplicationSecurityConfig {
                     .customUserType(GithubOAuthUser.class, "github").and().loginPage("/login").defaultSuccessUrl("/").permitAll();
         }
 
-//        @Override
-//        protected void configure(AuthenticationManagerBuilder auth) {
-//            auth.authenticationProvider(ApplicationSecurityConfig.this.authenticationProvider());
-//        }
+        @Override
+        protected void configure(AuthenticationManagerBuilder auth) {
+            auth.authenticationProvider(ApplicationSecurityConfig.this.authenticationProvider());
+        }
 
     }
 
